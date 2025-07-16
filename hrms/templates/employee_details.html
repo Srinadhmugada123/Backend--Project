@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Employee Details</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-logo">HRMS Admin</div>
+    <div class="nav-links">
+      <a href="/admin-dashboard/">Home</a>
+      <a href="/admin-dashboard/employees/">Employees</a>
+    </div>
+  </nav>
+
+  <h2>Employee Details</h2>
+
+  <div id="emp-details">
+    <!-- Filled by JS -->
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2025 HRMS Dashboard. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const empId = window.location.pathname.split("/")[3];
+
+    fetch(`http://127.0.0.1:8000/employees/${empId}/`)
+      .then(res => res.json())
+      .then(emp => {
+        const container = document.getElementById("emp-details");
+        container.innerHTML = `
+          <p><strong>ID:</strong> ${emp.id}</p>
+          <p><strong>Username:</strong> ${emp.username}</p>
+          <p><strong>Email:</strong> ${emp.email}</p>
+          <p><strong>Phone:</strong> ${emp.phone}</p>
+          <p><strong>Department:</strong> ${emp.department_name || 'N/A'}</p>
+          <p><strong>Join Date:</strong> ${emp.join_date || 'N/A'}</p>
+        `;
+      });
+  </script>
+
+</body>
+</html>

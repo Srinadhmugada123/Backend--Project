@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HRMS Admin Dashboard</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-logo">HRMS Admin</div>
+    <div class="nav-links">
+      <a href="/admin-dashboard/">Home</a>
+      <a href="/admin-dashboard/departments/">Departments</a>
+      <a href="/admin-dashboard/employees/">Employees</a>
+      <a href="/admin-dashboard/leaves/">Leaves</a>
+    </div>
+  </nav>
+    
+  <h1 class="title">Admin Panel</h1>
+
+  <div class="dashboard-container">
+    <!-- Department Card -->
+    <div class="card" onclick="window.location.href='/admin-dashboard/departments/'">
+      <img src="{% static 'images/department.png' %}" alt="Department Icon">
+      <h3>Departments</h3>
+    </div>
+
+    <!-- Employee Card -->
+    <div class="card" onclick="window.location.href='/admin-dashboard/employees/'">
+      <img src="{% static 'images/employee.png' %}" alt="Employee Icon">
+      <h3>Employees</h3>
+    </div>
+
+    <!-- Leave Card -->
+    <div class="card" onclick="window.location.href='/admin-dashboard/leaves/'">
+      <img src="{% static 'images/leave.png' %}" alt="Leave Icon">
+      <h3>Leaves</h3>
+    </div>
+
+  </div>
+
+
+  <footer class="footer">
+    <p>&copy; 2025 HRMS Dashboard. All rights reserved.</p>
+  </footer>
+</body>
+</html>
