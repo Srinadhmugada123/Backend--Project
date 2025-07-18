@@ -14,6 +14,8 @@
       <a href="/admin-dashboard/departments/">Departments</a>
       <a href="/admin-dashboard/employees/">Employees</a>
       <a href="/admin-dashboard/leaves/">Leaves</a>
+      <button onclick="logout()">Logout</button>
+
     </div>
   </nav>
     
@@ -44,5 +46,17 @@
   <footer class="footer">
     <p>&copy; 2025 HRMS Dashboard. All rights reserved.</p>
   </footer>
+
+
+  <script>
+    const username = localStorage.getItem("username");
+    document.getElementById("user").textContent = username;
+
+    function logout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("username");
+      window.location.href = "/login/";
+    }
+  </script>
 </body>
 </html>

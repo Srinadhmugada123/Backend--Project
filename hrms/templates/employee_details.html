@@ -25,23 +25,24 @@
     <p>&copy; 2025 HRMS Dashboard. All rights reserved.</p>
   </footer>
 
-  <script>
-    const empId = window.location.pathname.split("/")[3];
+ <script>
+  const empId = window.location.pathname.split("/")[3];
 
-    fetch(`http://127.0.0.1:8000/employees/${empId}/`)
-      .then(res => res.json())
-      .then(emp => {
-        const container = document.getElementById("emp-details");
-        container.innerHTML = `
-          <p><strong>ID:</strong> ${emp.id}</p>
-          <p><strong>Username:</strong> ${emp.username}</p>
-          <p><strong>Email:</strong> ${emp.email}</p>
-          <p><strong>Phone:</strong> ${emp.phone}</p>
-          <p><strong>Department:</strong> ${emp.department_name || 'N/A'}</p>
-          <p><strong>Join Date:</strong> ${emp.join_date || 'N/A'}</p>
-        `;
-      });
-  </script>
+  fetch(`http://127.0.0.1:8000/api/employees/${empId}/`)
+  .then(res => res.json())
+  .then(emp => {
+    const container = document.getElementById("emp-details");
+    container.innerHTML = `
+      <p><strong>ID:</strong> ${emp.id}</p>
+      <p><strong>Username:</strong> ${emp.username}</p>
+      <p><strong>Email:</strong> ${emp.email}</p>
+      <p><strong>Phone:</strong> ${emp.phone}</p>
+      <p><strong>Department:</strong> ${emp.department_name || 'N/A'}</p>
+      <p><strong>Join Date:</strong> ${emp.join_date || 'N/A'}</p>
+    `;
+  });
+</script>
+
 
 </body>
 </html>

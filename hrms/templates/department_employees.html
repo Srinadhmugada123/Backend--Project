@@ -37,7 +37,7 @@
     // Get department ID from URL path
     const departmentId = window.location.pathname.split("/")[3];
 
-    fetch(`http://127.0.0.1:8000/employees/?department=${departmentId}`)
+    fetch(`http://127.0.0.1:8000/api/employees/?department=${departmentId}`)
       .then(res => res.json())
       .then(data => {
         const tbody = document.querySelector("#employeeTable tbody");

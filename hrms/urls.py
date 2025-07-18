@@ -12,6 +12,7 @@ from .views import (
     RejectLeave,
     EmployeeRegisterView,
     EmployeeLoginView,
+    ManagerLeaveStatusUpdate,
     
 ) 
 from django.views.generic import TemplateView
@@ -19,35 +20,40 @@ from django.views.generic import TemplateView
 
 urlpatterns=[
     #----------Department urls-----------------
-    path('departments/',DepartmentAPIView.as_view(), name='departmentlist'),
-    path('departments/<int:pk>/',DepartmentDetailAPIView.as_view(), name='departmentdetails'),
+    path('api/departments/',DepartmentAPIView.as_view(), name='departmentlist'),
+    path('api/departments/<int:pk>/',DepartmentDetailAPIView.as_view(), name='departmentdetails'),
 
     #-------------------Employee Urls-------------------------
-    path('employees/',EmployeeAPIView.as_view(), name='employeelist'),
-    path('employees/<int:pk>/',EmployeeDetailAPIView.as_view(), name='employeedetails'),
+    path('api/employees/',EmployeeAPIView.as_view(), name='employeelist'),
+    path('api/employees/<int:pk>/',EmployeeDetailAPIView.as_view(), name='employeedetails'),
 
     #--------------------Leave Urls ---------------------------
-    path('leaves/',LeaveAPIVIew.as_view(), name='leaveslist'),
-    path('leaves/<int:pk>/',LeaveDetailAPIVIew.as_view(), name='leavedetail'),
+    path('api/leaves/',LeaveAPIVIew.as_view(), name='leaveslist'),
+    path('api/leaves/<int:pk>/',LeaveDetailAPIVIew.as_view(), name='leavedetail'),
 
     #------------------------Team members ---------------------
-    path('team_members/managers/<int:manager_id>/',TeamMembersUnderManager.as_view(),name='team_members'),
+    path('api/team_members/managers/<int:manager_id>/',TeamMembersUnderManager.as_view(),name='team_members'),
 
 
     #--------------------Leave status ----------------------------------
-    path('managers/pending_leaves/<int:manager_id>/',PendingLeavesForManager.as_view(), name='pending_leaves'),
-    path('leaves/<int:leave_id>/approve/',ApproveLeave.as_view(), name='approve-reject-leave'),
-    path('leaves/<int:pk>/rejected/',RejectLeave.as_view(), name='rejected-leaves'),
+    path('api/managers/pending_leaves/<int:manager_id>/',PendingLeavesForManager.as_view(), name='pending_leaves'),
+    path('api/leaves/<int:leave_id>/approve/',ApproveLeave.as_view(), name='approve-reject-leave'),
+    path('api/leaves/<int:pk>/rejected/',RejectLeave.as_view(), name='rejected-leaves'),
+
+    path('api/leaves/<int:leave_id>/status_update/', ManagerLeaveStatusUpdate.as_view(), name='leave-status-update'),
+    
 
 
     #---------------------------Login View-----------------
-    path('register/',EmployeeRegisterView.as_view(),name='employee-register'),
-    path('login/',EmployeeLoginView.as_view(), name='employee-login'),
+    path('api/register/',EmployeeRegisterView.as_view(),name='employee-register'),
+    path('api/login/',EmployeeLoginView.as_view(), name='employee-login'),
 
 
     #---------------------------Frontend view ----------------------
 
-    path('admin/login/', TemplateView.as_view(template_name='login.html')),
+    path('login/', TemplateView.as_view(template_name="login.html"), name='login'),
+    path('register/', TemplateView.as_view(template_name="register.html"), name='register'),
+
 
     path('admin-dashboard/',TemplateView.as_view(template_name="admin_dashboard.html")),
     path('admin-dashboard/departments/', TemplateView.as_view(template_name='departments.html')),

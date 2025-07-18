@@ -37,7 +37,7 @@
 
   <!-- ✅ Script to fetch department data -->
   <script>
-    fetch("http://127.0.0.1:8000/departments/")
+    fetch("http://127.0.0.1:8000/api/departments/")
       .then(res => res.json())
       .then(data => {
         const tbody = document.querySelector("#departmentTable tbody");

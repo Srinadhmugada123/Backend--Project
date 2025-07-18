@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register - HRMS</title>
+  <style>
+    body {
+      background: linear-gradient(to right, #c9d6ff, #e2e2e2);
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .register-box {
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .register-box h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    .register-box input,
+    .register-box select {
+      width: 100%;
+      padding: 12px 15px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .register-box button {
+      width: 100%;
+      background-color: #28a745;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 15px;
+    }
+
+    .register-box button:hover {
+      background-color: #218838;
+    }
+
+    .error-message {
+      color: red;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .success-message {
+      color: green;
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="register-box">
+    <h2>Register New Employee</h2>
+
+    <input type="text" id="username" placeholder="Username" required />
+    <input type="text" id="first_name" placeholder="First Name" required>
+    <input type="text" id="last_name" placeholder="Last Name" required>
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <input type="text" id="phone" placeholder="Phone" required />
+    <input type="date" id="join_date" placeholder="Join Date" required />
+    <input type="number" id="department_id" placeholder="Department ID" required />
+    <input type="text" id="reporting_manager" placeholder="Manager ID(optional)">
+
+    <button onclick="register()">Register</button>
+
+    <p id="msg" class="error-message"></p>
+  </div>
+
+  <script>
+  function register() {
+    const data = {
+      username: document.getElementById("username").value,
+      first_name: document.getElementById("first_name").value,
+      last_name: document.getElementById("last_name").value,
+      email: document.getElementById("email").value,
+      password: document.getElementById("password").value,
+      phone: document.getElementById("phone").value,
+      join_date: document.getElementById("join_date").value,
+      department: document.getElementById("department_id").value,
+      reporting_manager: document.getElementById("reporting_manager").value || null
+    };
+
+    fetch("http://127.0.0.1:8000/api/register/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(res => {
+      if (res.id) {
+        document.getElementById("msg").className = "success-message";
+        document.getElementById("msg").innerText = "Registered Successfully ✅";
+      } else {
+        document.getElementById("msg").className = "error-message";
+        document.getElementById("msg").innerText = res.error || "Registration failed ❌";
+      }
+    })
+    .catch(() => {
+      document.getElementById("msg").className = "error-message";
+      document.getElementById("msg").innerText = "Server error. Try again later.";
+    });
+  }
+</script>
+
+</body>
+</html>

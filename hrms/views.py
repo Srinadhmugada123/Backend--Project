@@ -9,13 +9,13 @@ from .serializers import *
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.hashers import check_password
+from django.utils.timezone import now
 #-----------------------------------------Department Views ------------------------------------------------------------------------------------------------
 
 class DepartmentAPIView(APIView):
     
     def get(self,request):
         data = Department.objects.all()
-        print(data.first().name)
         serializer = DepartmentSerializer(data, many=True)
         return Response(serializer.data)
     
@@ -147,8 +147,37 @@ class PendingLeavesForManager(APIView):
         )
         serializer = LeaveSerializer(leaves, many=True)
         return Response(serializer.data)
-    
-    
+
+
+class ManagerLeaveStatusUpdate(APIView):
+    def put(self, request, leave_id):
+        manager = request.user 
+        leave = get_object_or_404(Leave, id=leave_id)
+
+        print("Manager ID (Logged in):", manager.id)
+        print("Leave Applied By:", leave.employee.id)
+        print("Employee's Reporting Manager ID:", leave.employee.reporting_manager.id if leave.employee.reporting_manager else None)
+        
+        if leave.employee.reporting_manager != manager:
+            return Response({"error":"You are not authorized to approve/reject this leave"}, status=403)
+        
+        new_status = request.data.get("status")
+
+        if new_status not in["Approve","Rejected"]:
+            return Response({"error":"Invalid status. choose 'Approve' od 'Rejected'"},status=400)
+        
+        leave.status = new_status
+        leave.save()
+        return Response({"message": f"Leave {new_status.lower()}d successfully"}, status=200)
+
+
+
+
+
+
+
+
+
 class ApproveLeave(APIView):
     def put(self, request, leave_id):
         leave = get_object_or_404(Leave, id=leave_id)
@@ -198,10 +227,12 @@ class EmployeeLoginView(APIView):
 
         if not check_password(password, emp.password):
             return Response({"error": "Invalid password"}, status=400)
-
+        
+        emp.last_login=now()
+        emp.save()
         token, _ = Token.objects.get_or_create(user=emp)
         return Response({
             "token": token.key,
             "username": emp.username,
             "email": emp.email
-        }, status=200)
+        }, status=200)  
