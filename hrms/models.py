@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from .managers import EmployeeManager
+
 
 # Department Table-----------------------------------------
 
@@ -22,6 +24,8 @@ class Employee(AbstractUser):
     
     is_admin = models.BooleanField(default=False)
 
+    objects = EmployeeManager()
+
 
 # Managers Table ------------------------------------------
 class Manager(models.Model):
@@ -43,7 +47,7 @@ class Leave(models.Model):
     status = models.CharField(max_length=20, choices=[
         ('Pending', 'Pending'),
         ('Approve', 'Approve'),
-        ('Rejected', 'Rejected')
+        ('Rejected', 'Rejected') 
     ], default='Pending')
 
     def __str__(self):
@@ -55,8 +59,8 @@ class ReimbursementClaim(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     claim_type = models.CharField(max_length=100)
-    submitted_at = models.DateField()
-    approve_at = models.DateField(null=True, blank=True)
+    submitted_at = models.DateTimeField()
+    approve_at = models.DateTimeField(null=True, blank=True)
     remarks = models.TextField(null=True, blank=True)
     status = models.CharField(max_length=30, choices=[
         ('Pending', 'Pending'), 

@@ -14,6 +14,7 @@ from .views import (
     ManagerLeaveStatusUpdate,
     ReimbursementClaimAPIView,
     ReimbursementDeatilAPIView,
+    AdminReimbursementUpdateStatusAPIView,
 )
 from django.views.generic import TemplateView
 
@@ -86,6 +87,12 @@ urlpatterns = [
     path('api/reimbursementclaims/<int:pk>/', 
          ReimbursementDeatilAPIView.as_view(), 
          name='reimbursementdetails'),
+    
+
+    path('api/admin/reimbursement/<int:pk>/status/',
+     AdminReimbursementUpdateStatusAPIView.as_view(),
+     name='admin-reimbursement-status-update'),
+
 
 
     # ---------------------------Frontend view ----------------------

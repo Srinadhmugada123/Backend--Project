@@ -8,13 +8,11 @@ from .serializers import (EmployeeSerializer,
                           LeaveSerializer,
                           ManagerSerializer,
                           ReimbursementClaimSerializer,
-                          ReimbursementFileSerializer
                           )
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.hashers import check_password
 from django.utils.timezone import now
-
 
 
 # -----------------Admin----------------------
@@ -423,19 +421,22 @@ class EmployeeRegisterView(APIView):
 
 class EmployeeLoginView(APIView):
     def post(self, request):
-        email = request.data.get("email")
+        email_or_username = request.data.get("email") or request.data.get("username")
         password = request.data.get("password")
 
-        if not email or not password:
+        if not email_or_username or not password:
             return Response(
                 {
-                    "error": "Email and password required"
+                    "error": "Email/username and password required"
                 },
                 status=status.HTTP_400_BAD_REQUEST
             )
 
         try:
-            emp = Employee.objects.get(email=email)
+            if '@' in email_or_username:
+                emp = Employee.objects.get(email=email_or_username)
+            else:
+                emp = Employee.objects.get(username=email_or_username)
         except Employee.DoesNotExist:
             return Response(
                 {
@@ -592,4 +593,50 @@ class ReimbursementDeatilAPIView(APIView):
         )
 
 
+class AdminReimbursementUpdateStatusAPIView(APIView):
+    def put(self, request, pk):
+        try:
+            if not request.user.is_authenticated or not request.user.is_admin:
+                return Response(
+                    {
+                        "status": False,
+                        "message": "You are not authorized to perform this action"
+                    }, status=status.HTTP_403_FORBIDDEN
+                )
+            
+            claim = get_object_or_404(ReimbursementClaim, pk=pk)
+            
+            new_status = request.data.get("status")
+            remarks = request.data.get("remarks", "")
 
+            if new_status not in ["Approve", "Rejected"]:
+                return Response(
+                    {
+                        "status": False,
+                        "message": "Invalid status: choose 'Approve' or 'Rejected'. "
+                    }, status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            claim.status = new_status
+            claim.remarks = remarks
+            claim.approve_at = now()
+            claim.save()
+
+            serializer = ReimbursementClaimSerializer(claim)
+            return Response(
+                {
+                    "status": True,
+                    "message": f"Reimbursement {new_status.lower()} successfully. ",
+                    "data": serializer.data
+                }, status=status.HTTP_200_OK
+            )
+        
+        except Exception as e:
+            return Response(
+                {
+                    "status": False,
+                    "message": "An error Occured",
+                    "error": str(e)
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
