@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Department, Employee, Leave, Manager, ReimbursementClaim, ReimbursementFile
+from .models import Department, Employee, Leave, Manager, ReimbursementClaim
 from django.contrib.auth.hashers import make_password
 # from django.contrib.auth import get_user_model
 # User = get_user_model()
@@ -58,15 +58,7 @@ class ManagerSerializer(serializers.ModelSerializer):
 
 
 # --------------------Employee Reimbursement --------------------------
-class ReimbursementFileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ReimbursementFile
-        fields = ['id', 'file', 'uploaded_at']
-
-
 class ReimbursementClaimSerializer(serializers.ModelSerializer):
-    files = ReimbursementFileSerializer(many=True, read_only=True)
-
     class Meta:
         model = ReimbursementClaim
-        fields = ['id', 'employee', 'claim_type', 'amount', 'status', 'remarks', 'submitted_at', 'approve_at', 'files']
+        fields = '__all__'

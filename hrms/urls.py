@@ -92,6 +92,10 @@ urlpatterns = [
     path('api/admin/reimbursement/<int:pk>/status/',
      AdminReimbursementUpdateStatusAPIView.as_view(),
      name='admin-reimbursement-status-update'),
+    
+    path(
+        'api/admin/reimbursement/<int:pk>/delete/', 
+        AdminReimbursementUpdateStatusAPIView.as_view(), name='delete_claim'),
 
 
 

@@ -67,10 +67,9 @@ class ReimbursementClaim(models.Model):
         ('Approve', 'Approve'), 
         ('Rejected', 'Rejected')
     ], default='Pending')
+    file = models.FileField(upload_to='reimbusements')
+    uploaded_at = models.DateTimeField(auto_now_add=True,  null=True, blank=True)
+ 
 
 
-class ReimbursementFile(models.Model):
-    claim = models.ForeignKey(ReimbursementClaim, on_delete=models.CASCADE, related_name='files')
-    file = models.FileField(upload_to='reimbursements')
-    uploaded_at = models.DateTimeField(auto_now_add=True)
 
